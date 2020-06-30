@@ -15,7 +15,7 @@
 <section class="container">
 	<h1 class="text-center">CRUD APPLICATION</h1>
   <?php if (isset($_GET['error'])) { ?>
-     		<p class="error"><?php echo $_GET['error']; ?></p>
+     		<p class="error_"><?php echo $_GET['error']; ?></p>
   <?php } ?>
 	<form method="POST" action="crud.php">
   <div class="form-group">

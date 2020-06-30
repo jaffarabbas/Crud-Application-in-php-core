@@ -1,4 +1,4 @@
-<?php include "db_conn.php"; ?>
+<?php include "table_backend.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,69 +9,59 @@
     <meta name="Description" content="Enter your description here" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="style.css">
     <title>Title</title>
 </head>
 
 <body>
+
+    
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+         <h1 class="modal-title" id="editModalLabel">Edit this Note</h1>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+           </button>
+        </div>
+        <form action="check.php" method="POST">
+          <div class="modal-body">
+            <input type="hidden" name="idEdit" id="idEdit">
+             <div class="form-group">
+             <label for="">Name</label>
+            <input type="text" class="form-control" id="nameEdit" placeholder="Name" name="nameEdit"/>
+             </div>
+             <div class="form-group">
+             <label for="">Gender</label>
+             <select class="form-control" id="genderEdit" name="genderEdit">
+         <option>Male</option>
+         <option>Female</option>
+         <option>Not spesifide</option>
+             </select>
+             </div>
+             <div class="form-group">
+              <label for="">Salary</label>
+              <input type="number" class="form-control" id="salaryEdit" placeholder="Salary" name="salaryEdit">
+             </div>
+             <div class="form-group">
+              <label for="">Department</label>
+              <input type="text" class="form-control" id="departmentEdit" placeholder="Department" name="departmentEdit">
+             </div>
+            
+          </div>
+          <div class="modal-footer d-block mr-auto">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
     <section class="container">
-
-
-        <section>
-            <!-- Button trigger modal -->
-
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title" id="exampleModalLabel">Edit</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-                        </div>
-                        <div class="modal-body">
-
-                            <h1 class="text-center">Edit Crud</h1>
-                            <?php if (isset($_GET['error'])) { ?>
-                            <p class="error">
-                                <?php echo $_GET['error']; ?>
-                            </p>
-                            <?php } ?>
-                            <form method="POST" action="crud.php">
-                                <div class="form-group">
-                                    <label for="">Name</label>
-                                    <input type="text" class="form-control" id="f1" placeholder="Name" name="nameEdit">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Gender</label>
-                                    <select class="form-control" id="f2" name="genderEdit">
-      <option>Male</option>
-      <option>Female</option>
-      <option>Not spesifide</option>
-    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Salary</label>
-                                    <input type="number" class="form-control" id="f3" placeholder="Salary" name="salaryEdit">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Department</label>
-                                    <input type="text" class="form-control" id="f4" placeholder="Department" name="departmentEdit">
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" class="btn btn-primary" name="submit" value="Submit">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
 
         <div>
@@ -97,19 +87,18 @@
             <tbody>
                 <?php   
     //$show2 = $_POST['Answer2'];
-    $sql = "SELECT * FROM `crudapp` WHERE 1";
+    $sql = "SELECT * FROM `crudapp`";
     $result = mysqli_query($conn,$sql) ;
     $id = 0;
     while($row = mysqli_fetch_assoc($result)){
-        $id = $id +1;
+        $id = $id + 1;
         echo "<tr>
         <th scope='row'>".$id."</th>
         <td>".$row['name']."</td>
         <td>".$row['gender']."</td>
         <td>".$row['salary']."</td>
         <td>".$row['department']."</td>
-        <td><button name='edit' id='Edit' type='button' class='edit btn btn-primary' data-toggle='modal' data-target='#exampleModal'>Edit</button>
-        <button class='btn btn-primary'>Delete</button></td>
+        <td> <button class='edit btn btn-sm btn-primary' id=".$row['id'].">Edit</button> <button class='delete btn btn-sm btn-primary' id=d".$row['id'].">Delete</button>  </td>
       </tr>";
     }  ?>
             </tbody>
@@ -120,21 +109,46 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
-        edits = document.getElementById('Edit');
-        Array.from(edits).forEach((element) => {
-            element.addEventListener("click", (e) => {
-                console.log("Edit ", );
-                tr = e.target.parentNode.parentNode;
-                name = ts.getElementByTagName("td")[0].innerText;
-
-
-            })
-        });
-
+        edits = document.getElementsByClassName('edit');
+      Array.from(edits).forEach((element) => {
+      element.addEventListener("click", (e) => {
+        console.log("edit ");
+        tr = e.target.parentNode.parentNode;
+        name = tr.getElementsByTagName("td")[0].innerText;
+        gender = tr.getElementsByTagName("td")[1].innerText;
+        salary = tr.getElementsByTagName("td")[2].innerText;
+        department = tr.getElementsByTagName("td")[3].innerText;
+        console.log(name,gender,salary,department);
+        nameEdit.value = name;
+        genderEdit.value = gender;
+        salaryEdit.value = salary;
+        departmentEdit.value = department;
+        idEdit.value = e.target.id;
+        console.log(e.target.id)
+        $('#editModal').modal('toggle');
+      })
+    })
         // edit = document.getElementsByClassName("edit");
         // Array.from(edit).forEach((element) =>{
 
         // });
+
+    //     deletes = document.getElementsByClassName('delete');
+    // Array.from(deletes).forEach((element) => {
+    //   element.addEventListener("click", (e) => {
+    //     console.log("edit ");
+    //     id = e.target.id.substr(1);
+
+    //     if (confirm("Are you sure you want to delete this note!")) {
+    //       console.log("yes");
+    //       window.location = `/crud/index.php?delete=${id}`;
+    //       // TODO: Create a form and use post request to submit a form
+    //     }
+    //     else {
+    //       console.log("no");
+    //     }
+    //   })
+    // })
     </script>
 
 </body>

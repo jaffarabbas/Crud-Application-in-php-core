@@ -1,4 +1,8 @@
 <?php
+$insert = false;
+$update = false;
+$delete = false;
+
 $sname= "localhost";
 $unmae= "root";
 $password = "";
