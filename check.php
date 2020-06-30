@@ -1,5 +1,5 @@
 <?php  
-// INSERT INTO `notes` (`sno`, `title`, `description`, `tstamp`) VALUES (NULL, 'But Books', 'Please buy books from Store', current_timestamp());
+// INSERT INTO `notes` (`id`, `title`, `description`, `tstamp`) VALUES (NULL, 'But Books', 'Please buy books from Store', current_timestamp());
 $insert = false;
 $update = false;
 $delete = false;
@@ -18,20 +18,20 @@ if (!$conn){
 }
 
 if(isset($_GET['delete'])){
-  $sno = $_GET['delete'];
+  $id = $_GET['delete'];
   $delete = true;
-  $sql = "DELETE FROM `notes` WHERE `sno` = $sno";
+  $sql = "DELETE FROM `notes` WHERE `id` = $id";
   $result = mysqli_query($conn, $sql);
 }
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-if (isset( $_POST['snoEdit'])){
+if (isset( $_POST['idEdit'])){
   // Update the record
-    $sno = $_POST["snoEdit"];
+    $id = $_POST["idEdit"];
     $title = $_POST["titleEdit"];
     $description = $_POST["descriptionEdit"];
 
   // Sql query to be executed
-  $sql = "UPDATE `notes` SET `title` = '$title' , `description` = '$description' WHERE `notes`.`sno` = $sno";
+  $sql = "UPDATE `notes` SET `title` = '$title' , `description` = '$description' WHERE `notes`.`id` = $id";
   $result = mysqli_query($conn, $sql);
   if($result){
     $update = true;
@@ -91,9 +91,9 @@ else{
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <form action="/crud/index.php" method="POST">
+        <form action="check.php" method="POST">
           <div class="modal-body">
-            <input type="hidden" name="snoEdit" id="snoEdit">
+            <input type="hidden" name="idEdit" id="idEdit">
             <div class="form-group">
               <label for="title">Note Title</label>
               <input type="text" class="form-control" id="titleEdit" name="titleEdit" aria-describedby="emailHelp">
@@ -172,7 +172,7 @@ else{
   ?>
   <div class="container my-4">
     <h2>Add a Note to iNotes</h2>
-    <form action="/crud/index.php" method="POST">
+    <form action="check.php" method="POST">
       <div class="form-group">
         <label for="title">Note Title</label>
         <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
@@ -202,14 +202,14 @@ else{
         <?php 
           $sql = "SELECT * FROM `notes`";
           $result = mysqli_query($conn, $sql);
-          $sno = 0;
+          $id = 0;
           while($row = mysqli_fetch_assoc($result)){
-            $sno = $sno + 1;
+            $id = $id + 1;
             echo "<tr>
-            <th scope='row'>". $sno . "</th>
+            <th scope='row'>". $id . "</th>
             <td>". $row['title'] . "</td>
             <td>". $row['description'] . "</td>
-            <td> <button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <button class='delete btn btn-sm btn-primary' id=d".$row['sno'].">Delete</button>  </td>
+            <td> <button class='edit btn btn-sm btn-primary' id=".$row['id'].">Edit</button> <button class='delete btn btn-sm btn-primary' id=d".$row['id'].">Delete</button>  </td>
           </tr>";
         } 
           ?>
@@ -248,7 +248,7 @@ else{
         console.log(title, description);
         titleEdit.value = title;
         descriptionEdit.value = description;
-        snoEdit.value = e.target.id;
+        idEdit.value = e.target.id;
         console.log(e.target.id)
         $('#editModal').modal('toggle');
       })
@@ -258,11 +258,11 @@ else{
     Array.from(deletes).forEach((element) => {
       element.addEventListener("click", (e) => {
         console.log("edit ");
-        sno = e.target.id.substr(1);
+        id = e.target.id.substr(1);
 
         if (confirm("Are you sure you want to delete this note!")) {
           console.log("yes");
-          window.location = `/crud/index.php?delete=${sno}`;
+          window.location = `/crud/index.php?delete=${id}`;
           // TODO: Create a form and use post request to submit a form
         }
         else {
