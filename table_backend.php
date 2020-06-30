@@ -2,14 +2,12 @@
 
 include "db_conn.php"; 
 
-
-
-// if(isset($_GET['delete'])){
-//     $id = $_GET['delete'];
-//     $delete = true;
-//     $sql = "DELETE FROM `crudapp ` WHERE `id` = $id";
-//     $result = mysqli_query($conn, $sql);
-//   }
+if(isset($_GET['delete'])){
+    $id = $_GET['delete'];
+    $delete = true;
+    $sql = "DELETE FROM `crudapp` WHERE `id` = $id";
+    $result = mysqli_query($conn, $sql);
+  }
 
 
 
@@ -36,9 +34,7 @@ function validate($data){
         $update = true;
       }
     }
-    else{
-        echo "We could not update the record successfully";
-    }
+
 
 
 ?>
